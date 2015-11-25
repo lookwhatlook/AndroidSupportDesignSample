@@ -187,6 +187,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.fab32:
                     text = fab32.getLabelText();
+                    Intent intent=new Intent(MainActivity.this,ScrollableActivity.class);
+                    startActivity(intent);
+
                     break;
             }
 
@@ -221,14 +224,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-//                if (s.length() > 4) {
-//                    textinput.setErrorEnabled(true);
-//                    textinput.setError("Password error");
-//
-//                } else {
-//                    textinput.setError("");
-////                    textinput.setErrorEnabled(false);
-//                }
+
             }
         });
 

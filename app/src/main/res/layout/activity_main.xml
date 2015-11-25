@@ -81,7 +81,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/user_task_collection_normal"
-                fab:fab_size="mini" />
+                fab:fab_size="mini"
+                fab:fab_label="跳转到ScrollableLayout Demo"/>
 
         </com.github.clans.fab.FloatingActionMenu>
 
