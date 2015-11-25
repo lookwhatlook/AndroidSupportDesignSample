@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ru.noties.scrollable.ScrollableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollable_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    app:scrollable_closeUpAnimationMillis="250"
+    app:scrollable_closeUpAnimatorInterpolator="@android:anim/accelerate_decelerate_interpolator"
+    app:scrollable_considerIdleMillis="125"
+    app:scrollable_defaultCloseUp="true"
+    app:scrollable_friction="0.075"
+    app:scrollable_maxScroll="200dp"
+    app:scrollable_scrollerFlywheel="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.abc.widget.SimpleImageBanner
+            android:id="@+id/sib_indicator_right_with_text"
+            android:layout_width="fill_parent"
+            android:layout_height="200dp"
+            app:bb_delay="3"
+            app:bb_indicatorGravity="RIGHT"
+            app:bb_period="5"
+            app:bb_scale="0.5625"
+            app:bib_indicatorCornerRadius="2dp"
+            app:bib_indicatorHeight="4dp"
+            app:bib_indicatorWidth="10dp" />
+
+
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tablayout"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@android:color/holo_orange_light"
+            android:fillViewport="false" />
+
+    </LinearLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="45dp" />
+
+</ru.noties.scrollable.ScrollableLayout>
