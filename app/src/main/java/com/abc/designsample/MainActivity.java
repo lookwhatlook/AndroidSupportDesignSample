@@ -2,8 +2,11 @@ package com.abc.designsample;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -22,7 +25,10 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -30,6 +36,7 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.lzm.designsample.R;
 import com.abc.designsample.adapter.RecyclerAdapter;
 import com.abc.designsample.common.DividerItemDecoration;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 //import com.nispok.snackbar.Snackbar;
 //import com.nispok.snackbar.SnackbarManager;
 //import com.nispok.snackbar.listeners.ActionClickListener;
@@ -48,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     com.github.clans.fab.FloatingActionButton fab22;
     com.github.clans.fab.FloatingActionButton fab32;
 
+    private SystemBarTintManager tintManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,15 +66,15 @@ public class MainActivity extends AppCompatActivity {
 //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 //        }
+
         setContentView(R.layout.activity_main);
+        setSys();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        initInputLayout();
-        initDrawLayout();
 
 //        actionBar.setHomeAsUpIndicator(R.mipmap.user_center_icon_logout_pressed);
 //        toolbar.setNavigationIcon(R.mipmap.user_center_icon_logout_normal);
@@ -76,6 +85,23 @@ public class MainActivity extends AppCompatActivity {
                 mDrawerLayout.openDrawer(GravityCompat.START);
             }
         });
+
+        initInputLayout();
+        initFloatMenu();
+
+        //注意！！DrawLayout写在toolbar下面才能使图标变成菜单的图标（三横），否则是一个返回的箭头
+        initDrawLayout();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+            // 为4.4透明状态栏布局延伸到状态栏做适配
+            mDrawerLayout.setFitsSystemWindows(false);
+            final CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(
+                    R.id.coordinator_layout);
+            if (coordinatorLayout != null) {
+                // CoordinatorLayout设为true才能把布局延伸到状态栏
+                coordinatorLayout.setFitsSystemWindows(true);
+            }
+        }
+
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
         collapsingToolbar.setTitle("林晓婧");
         collapsingToolbar.setExpandedTitleColor(Color.WHITE);//设置还没收缩时状态下字体颜色
 //        collapsingToolbar.setCollapsedTitleTextColor(Color.BLACK);//设置收缩后Toolbar上字体的颜色
+//        materialCollapsingForKitkat(collapsingToolbar);
 
         recyclerView = (RecyclerView) findViewById(R.id.rvToDoList);
         recyclerView.setLayoutManager(new
@@ -108,8 +135,62 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerItemDecoration(
                 MainActivity.this, DividerItemDecoration.VERTICAL_LIST));
 //        recyclerView.addItemDecoration(new SpaceItemDecoration(10));
-        initFloatMenu();
+
     }
+
+    private void setSys(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            tintManager = new SystemBarTintManager(this);
+            tintManager.setStatusBarTintEnabled(true);
+           // tintManager.setStatusBarTintResource(android.R.color.transparent );
+        }
+    }
+
+
+    private void materialCollapsingForKitkat(final CollapsingToolbarLayout toolbarLayout) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+            // 设置全屏
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            // 设置Toolbar对顶部的距离
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            final FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) toolbar
+                    .getLayoutParams();
+            final int statusBarHeight = layoutParams.topMargin = MeasureUtil
+                    .getStatusBarHeight(this);
+            // 算出伸缩移动的总距离
+            final AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
+            final int[] verticalMoveDistance = new int[1];
+            toolbarLayout.getViewTreeObserver()
+                    .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            verticalMoveDistance[0] = toolbarLayout
+                                    .getMeasuredHeight() - MeasureUtil
+                                    .getToolbarHeight(MainActivity.this);
+                            toolbarLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        }
+                    });
+            appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+                int lastVerticalOffset = 0;
+
+                @Override
+                public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                    // KLog.e(lastVerticalOffset + ";" + verticalOffset);
+                    if (lastVerticalOffset != verticalOffset && verticalMoveDistance[0] != 0) {
+                        layoutParams.topMargin = (int) (statusBarHeight - Math
+                                .abs(verticalOffset) * 1.0f / verticalMoveDistance[0] * statusBarHeight);
+                        // KLog.e(layoutParams.topMargin);
+                        toolbar.setLayoutParams(layoutParams);
+                    }
+                    lastVerticalOffset = verticalOffset;
+                }
+            });
+        }
+    }
+
 
     private void initFloatMenu(){
         final FloatingActionMenu menu2 = (FloatingActionMenu) findViewById(R.id.menu2);

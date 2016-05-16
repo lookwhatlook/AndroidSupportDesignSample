@@ -20,17 +20,15 @@
 
         <com.abc.widget.SimpleImageBanner
             android:id="@+id/sib_indicator_right_with_text"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="200dp"
             app:bb_delay="3"
             app:bb_indicatorGravity="RIGHT"
             app:bb_period="5"
             app:bb_scale="0.5625"
-            app:bib_indicatorCornerRadius="2dp"
-            app:bib_indicatorHeight="4dp"
-            app:bib_indicatorWidth="10dp" />
-
-
+            app:bb_indicatorCornerRadius="2dp"
+            app:bb_indicatorHeight="4dp"
+            app:bb_indicatorWidth="10dp" />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tablayout"

@@ -9,8 +9,10 @@
         android:minSdkVersion="15"
         android:targetSdkVersion="23" />
 
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -32,16 +34,21 @@
         <activity
             android:name="com.abc.designsample.Main2Activity"
             android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.abc.designsample.Main3Activity"
             android:label="@string/title_activity_main3"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.abc.designsample.ScrollableActivity"
             android:label="@string/title_activity_scrollable"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name="com.abc.designsample.BaseActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name="com.abc.designsample.BaseActivity" />
+        <activity
+            android:name="com.abc.designsample.FullscreenActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_fullscreen"
+            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>
